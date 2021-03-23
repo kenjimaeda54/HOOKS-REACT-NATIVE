@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { TouchableOpacity, StyleSheet, View, TextInput, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,13 +14,12 @@ export default function App() {
     async function pegaNome() {
       let response = await AsyncStorage.getItem('nomes');
       if (response !== null) {
-        setNome(response);
+        setNome(response)
       }
+
     }
-
     pegaNome();
-
-  }, []);
+  },[])
 
 
 
@@ -31,17 +30,27 @@ export default function App() {
   useEffect(() => {
 
     async function saveStorage() {
-      await AsyncStorage.setItem('nomes', nome);
+      await AsyncStorage.setItem('nomes', nome)
     }
+
     saveStorage();
 
-  }, [nome])
+  }, [nome]);
 
 
   function alterar() {
     setNome(input);
     setInput('');
   }
+
+  
+  // Ideia usar o useMemo evitar renderização desnecessaria,principalmente
+  // quando realiza muitos calculos arimeticos e cada soma,subtração,multiplicação
+  //renderizar.
+  const letras = useMemo(()=>{
+    console.log("mudou letra");
+    return nome.length;
+  },[nome]);// cuidado com a variavel de retorno se não tiver não funciona
 
   return (
     <View>
@@ -53,11 +62,13 @@ export default function App() {
         onChangeText={(texto) => setInput(texto)}
       />
       <Text style={styles.texto}>{nome}</Text>
+      <Text style={styles.texto}>{nome} tem {letras} letras</Text>
       <TouchableOpacity style={styles.botao} onPress={alterar} >
         <Text style={styles.textoBo}>
           Alterar nome!!!
                </Text>
       </TouchableOpacity>
+
 
     </View>
 
