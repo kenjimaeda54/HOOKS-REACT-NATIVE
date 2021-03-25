@@ -1,11 +1,12 @@
 
-import React, { useState, useEffect,useMemo } from 'react';
+import React, { useState, useEffect,useMemo, useRef } from 'react';
 import { TouchableOpacity, StyleSheet, View, TextInput, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [input, setInput] = useState('');
   const [nome, setNome] = useState("Erika");
+  const novoNome = useRef(null);
 
 
   //Aqui pego o nome o que esta salvo no storage e construou na tela.
@@ -36,7 +37,10 @@ export default function App() {
     saveStorage();
 
   }, [nome]);
-
+   
+  function novo(){      
+    novoNome.current.focus(); //pega uma propriedade do html
+  }
 
   function alterar() {
     setNome(input);
@@ -60,6 +64,7 @@ export default function App() {
         placeholder="novo nome"
         value={input}
         onChangeText={(texto) => setInput(texto)}
+        ref={novoNome} /*useRef utiliza o ref,para referenciar algo*/
       />
       <Text style={styles.texto}>{nome}</Text>
       <Text style={styles.texto}>{nome} tem {letras} letras</Text>
@@ -67,6 +72,11 @@ export default function App() {
         <Text style={styles.textoBo}>
           Alterar nome!!!
                </Text>
+      </TouchableOpacity>
+      <TouchableOpacity  style={{marginTop:20}}  onPress={novo} > 
+          <Text >
+            Novo nome
+          </Text>
       </TouchableOpacity>
 
 
